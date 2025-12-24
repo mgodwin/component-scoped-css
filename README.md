@@ -120,7 +120,7 @@ Here, `.card` styles apply to everything **except** what appears inside `._actio
 
 You can write as many classes as you want to indicate as lower bounds for your scope:
 
-```
+```css
 @scope(.card) to (._actions, .__slot__, .header) {...}
 ```
 
