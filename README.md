@@ -154,3 +154,8 @@ Most CSS pain comes from global naming: figuring out who owns an element, preven
 BEM, OOCSS, and CSS‑in‑JS all try to solve this with conventions, tooling, or indirection — but the underlying problem is that CSS never had real component boundaries.
 
 `@scope` finally gives us those boundaries. Component‑Scoped CSS uses it to make ownership, nesting, and composition visible directly in the markup, without prefixes, hashes, or build steps.
+
+## What about tailwind?
+
+Tailwind is great for rapid prototyping, but you usually end up creating component-like classes ultimately anyways.  It's great for enforcing consistent spacing/padding and as a way to build a design system with great aesthetics.
+I don't love that it requires it's own set of build tools, and you can get really close to the same functionality with some carefully crafted css variables.
