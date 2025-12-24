@@ -124,6 +124,8 @@ You can write as many classes as you want to indicate as lower bounds for your s
 @scope(.card) to (._actions, .__slot__, .header) {...}
 ```
 
+**Note:** Scoping does not guarantee that inherited properties don't "escape" from the scope.  It does guarantee that you don't have to worry about styles from a parent scope bleeding into your child scope, e.g. `card ._title` is independent from `figure ._title`.  Inherited properties for things like color, font-weight, font-size, etc. need to be considered and accounted for.
+
 ## How about variants?
 
 You can use whatever naming scheme that makes sense to you to indicate variants of your components, but BEM has a great recommendation with their modifier syntax, `--variant` :
