@@ -34,7 +34,7 @@ A modern, vanilla‑CSS pattern for building isolated, composable UI components 
 
 ### 1. Components are defined with @scope
 
-@scope is widely supported across all browsers as of late 2025. It allows you to define an upper bound and lower bound where your styles apply within the DOM.  This allows us to write styles that are scoped only to our component!
+@scope is [now widely supported across all browsers](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@scope#browser_compatibility). It allows you to define an upper bound and lower bound where your styles apply within the DOM.  This allows us to write styles that are scoped only to our component!
 
 When you define your component with @scope, we're declaring the **upper bound** of our scope where our styles apply to:
 
