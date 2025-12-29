@@ -2,7 +2,7 @@
 
 A modern, vanilla‑CSS pattern for building isolated, composable UI components using [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope).
 
-@scope prevents style leakage between components.  A couple of small naming patterns help with readability and maintainability.  It's like a modern take on BEM.
+`@scope` prevents style leakage between components.  A couple of small naming patterns help with readability and maintainability.  It's a modern take on BEM.
 
 ```css
 @scope (.card) to (._actions) {
@@ -32,7 +32,7 @@ A modern, vanilla‑CSS pattern for building isolated, composable UI components 
 </div>
 ```
 
-@scope is now a baseline browser feature in all modern browsers as of late 2025!
+[@scope is now a baseline browser feature](https://caniuse.com/css-cascade-scope) as of late 2025!
 
 ## How it works
 
