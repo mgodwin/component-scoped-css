@@ -2,6 +2,8 @@
 
 A modern, vanilla‑CSS pattern for building isolated, composable UI components using [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope).
 
+@scope prevents style leakage between components.  A couple of small naming patterns help with readability and maintainability.  It's like a modern take on BEM.
+
 ```css
 @scope (.card) to (._actions) {
   :scope {
@@ -16,7 +18,6 @@ A modern, vanilla‑CSS pattern for building isolated, composable UI components 
 
 @scope (.button) {
   :scope { padding: 0.5rem 1rem; background: black; color: white; }
-  ._text { font-weight: 500; }
 }
 ```
 
@@ -30,22 +31,22 @@ A modern, vanilla‑CSS pattern for building isolated, composable UI components 
   </div>
 </div>
 ```
-## Rules
 
-### 1. Components are defined with @scope
+@scope is now a baseline browser feature in all modern browsers as of late 2025!
 
-@scope is [now widely supported across all browsers](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@scope#browser_compatibility). It allows you to define an upper bound and lower bound where your styles apply within the DOM.  This allows us to write styles that are scoped only to our component!
+## How it works
 
-When you define your component with @scope, we're declaring the **upper bound** of our scope where our styles apply to:
+### 1. Define components with @scope, name them the thing they are, no special prefixes.
+
+Use the `:scope` pseudo class to apply styles to your root component element:
 
 ```css
 @scope (.card) {
-  /* apply styles to the .card class within the :scope pseudo selector: */
   :scope { border: 1px solid #eee }
 }
 ```
 
-Components should be named without any special prefixes:
+Some example component names:
 
 * `card`
 * `dropdown`
@@ -66,7 +67,9 @@ Without some sort of convention, it's hard to know how one class relates to one 
 </div>
 ```
 
-Use a `_` prefix to denote that this class is a part of the component higher up in the DOM hierarchy:
+BEM expressed this relationship with `component__part` naming, but this becomes cumbersome when you refactor things.  It also feels unnecessary now that we have native CSS Selector nesting, but your class names can collide without some sort of way to scope your styles to the current component.  For example: `.card ._title` can match a deeply nested `._title` inside a child component.
+
+@scope enables us to prevent those nested class name collisions, so let's just use an `_` to indicate the relationship:
 
 ```html
 <div class="card">
@@ -84,20 +87,25 @@ This is easy to represent within our @scope definition:
 }
 ```
 
-Don't worry about name collisions with other component parts, that's what @scope is here to help with!
-
 ---
 
 ### 3. Slots control where styles stop
 
-`@scope` supports [**donut scopes**](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@scope#description) via `to(...)`, allowing you to declare *holes* or *slots* in a component where its styles should not apply.  This is the **lower bound** of our scope.
+Without some sort of lower bound on our style cascade, class names declared in one component will collide with those in nested components:
 
-This allows us to safely compose components without style interference:
+To address this, we use  `@scope`'s [**donut scopes**](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@scope#description) feature via `to(...)`, allowing you to declare *holes* or *slots* in a component where its styles should not apply.  This is the **lower bound** of our scope.
+
+This allows us to specify where our styles should stop in the DOM, so we can embed other components without inheriting the styles from the parent component:
 
 ```css
 @scope (.card) to (._actions) {
   ._title { font-weight: 600; }
+  ._text { color: orange; }
   ._body  { color: var(--text-muted); }
+}
+
+@scope (.button) {
+  ._text { font-weight: bold; }
 }
 ```
 
@@ -124,11 +132,11 @@ You can write as many classes as you want to indicate as lower bounds for your s
 @scope(.card) to (._actions, .__slot__, .header) {...}
 ```
 
-**Note:** Scoping does not guarantee that inherited properties don't "escape" from the scope.  It does guarantee that you don't have to worry about styles from a parent scope bleeding into your child scope, e.g. `card ._title` is independent from `figure ._title`.  Inherited properties for things like color, font-weight, font-size, etc. need to be considered and accounted for.
+**Note:** Scoping does offer a lot of isolation, especially when reusing class names, e.g. `.card ._title` styles are never merged with `.button ._title` (assuming proper upper and lower bounds on your scopes).  There is a weird gotcha with inherited properties though: they are able to "escape" from the scope.  For example, `color: red` can and will inherit down across scope boundaries.  This is important to be aware of, and can potentially be good or bad, depending on the context.
 
 ## How about variants?
 
-You can use whatever naming scheme that makes sense to you to indicate variants of your components, but BEM has a great recommendation with their modifier syntax, `--variant` :
+You can use whatever naming scheme that makes sense to you to indicate variants of your components, but BEM's modifier syntax works well as second class, e.g. `--variant` :
 
 ```css
 @scope(.card) {
@@ -142,20 +150,3 @@ You can use whatever naming scheme that makes sense to you to indicate variants 
 For example, `card --red` would correctly apply the styles you're looking for.
 
 Or you could do something like `button --primary` for example.
-
-## Why components?
-
-Structuring your CSS around component boundaries feels fairly natural, components are the part of the web equation that React got right.  You're already calling it a `Card` in your server side code, so why do you have to call it something else in your CSS?  Because scope affords us so much isolation, let's call things what they are as much as possible.
-
-## Why not BEM?
-
-Most CSS pain comes from global naming: figuring out who owns an element, preventing collisions, and being afraid to refactor.
-
-BEM, OOCSS, and CSS‑in‑JS all try to solve this with conventions, tooling, or indirection — but the underlying problem is that CSS never had real component boundaries.
-
-`@scope` finally gives us those boundaries. Component‑Scoped CSS uses it to make ownership, nesting, and composition visible directly in the markup, without prefixes, hashes, or build steps.
-
-## What about tailwind?
-
-Tailwind is great for rapid prototyping, but you usually end up creating component-like classes ultimately anyways.  It's great for enforcing consistent spacing/padding and as a way to build a design system with great aesthetics.
-I don't love that it requires it's own set of build tools, and you can get really close to the same functionality with some carefully crafted css variables.
