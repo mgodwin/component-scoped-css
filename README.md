@@ -67,9 +67,9 @@ Without some sort of convention, it's hard to know how one class relates to one 
 </div>
 ```
 
-BEM expressed this relationship with `component__part` naming, but this becomes cumbersome when you refactor things.  It also feels unnecessary now that we have native CSS Selector nesting, but your class names can collide without some sort of way to scope your styles to the current component.  For example: `.card ._title` can match a deeply nested `._title` inside a child component.
+BEM expressed this relationship with `component__part` naming, but this becomes cumbersome when refactoring.  It also feels unnecessary now that we have native CSS Selector nesting, but unfortunately your class names can collide without a scoping mechanism:  For example, `.card ._title` can match a deeply nested `._title` inside a child component.
 
-@scope enables us to prevent those nested class name collisions, so let's just use an `_` to indicate the relationship:
+`@scope` enables us to prevent those nested class name collisions, so let's just use an `_` to indicate the relationship:
 
 ```html
 <div class="card">
@@ -93,9 +93,9 @@ This is easy to represent within our @scope definition:
 
 Without some sort of lower bound on our style cascade, class names declared in one component will collide with those in nested components:
 
-To address this, we use  `@scope`'s [**donut scopes**](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@scope#description) feature via `to(...)`, allowing you to declare *holes* or *slots* in a component where its styles should not apply.  This is the **lower bound** of our scope.
+To address this, we use  `@scope`'s `to(...)` feature, allowing you to declare *holes* or *slots* in a component where its styles should **not** apply.
 
-This allows us to specify where our styles should stop in the DOM, so we can embed other components without inheriting the styles from the parent component:
+Using this we can embed other components in our component without our class names colliding with one another:
 
 ```css
 @scope (.card) to (._actions) {
